@@ -1,6 +1,6 @@
 # Shopping List
-Shopping list made with natiive Android.
+Shopping list made with native Android.
 ### Features
-- Make several shopping lists
-- Edit/delete shopping lists
-- Mark item on shopping list as bought
+- make several shopping lists
+- edit/delete shopping lists
+- mark item on shopping list as bought
