@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">Shopping List</string>
+    <string name="shared_preferences">com.aleksitolvanen.shoppinglist.sharedpreferences</string>
+    <string name="intent_list">intentList</string>
+    <string name="intent_new_list">intentNewList</string>
+    <string name="title_lists">Shopping lists</string>
+    <string name="title_items">Items of list</string>
+    <string name="button_new_list">CREATE NEW LIST</string>
+    <string name="button_add_item">ADD</string>
+    <string name="hint_new_item">New item</string>
+    <string name="context_menu_list_delete">Delete</string>
+    <string name="context_menu_item_delete">Delete</string>
+    <string name="context_menu_item_edit">Edit</string>
+    <string name="settings_menu_list_delete_lists">Delete lists</string>
+    <string name="settings_menu_item_delete_items">Delete items</string>
+    <string name="toast_empty_item">Empty item!</string>
+</resources>

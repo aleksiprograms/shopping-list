@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title_lists">Ostoslistat</string>
+    <string name="title_items">Listan tuotteet</string>
+    <string name="button_new_list">LUO UUSI LISTA</string>
+    <string name="button_add_item">LISÄÄ</string>
+    <string name="hint_new_item">Uusi tuote</string>
+    <string name="context_menu_list_delete">Poista</string>
+    <string name="context_menu_item_delete">Poista</string>
+    <string name="context_menu_item_edit">Muokkaa</string>
+    <string name="settings_menu_list_delete_lists">Poista listat</string>
+    <string name="settings_menu_item_delete_items">Poista tuotteet</string>
+    <string name="toast_empty_item">Tyhjä tuote!</string>
+</resources>
