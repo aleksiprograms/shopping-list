@@ -101,8 +101,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.settingsMenuListDelete:
+            case R.id.settingsMenuListDeleteLists:
                 DatabaseHelper.deleteAllLists(getApplicationContext());
+                listsList.clear();
+                listView.invalidateViews();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

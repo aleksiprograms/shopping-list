@@ -3,6 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".activities.MainActivity">
     <item
-        android:id="@+id/settingsMenuListDelete"
+        android:id="@+id/settingsMenuListDeleteLists"
         android:title="@string/settings_menu_list_delete_lists" />
 </menu>

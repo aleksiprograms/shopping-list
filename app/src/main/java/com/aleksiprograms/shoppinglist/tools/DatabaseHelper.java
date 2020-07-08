@@ -127,9 +127,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return items;
     }
 
-    public static int deleteAllItems(Context context) {
+    public static int deleteAllItems(long listId, Context context) {
         SQLiteDatabase db = DatabaseHelper.getInstance(context).getWritableDatabase();
-        int i = db.delete(TABLE_ITEMS, null, null);
+        int i = db.delete(TABLE_ITEMS, COLUMN_ITEM_LIST_ID + " = ?",
+                new String[]{String.valueOf(listId)});
         db.close();
         return i;
     }

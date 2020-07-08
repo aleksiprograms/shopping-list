@@ -28,6 +28,7 @@ import java.util.ArrayList;
 
 public class ItemsActivity extends AppCompatActivity {
 
+    private long listId;
     private static ArrayList<Item> itemsList;
     private ListView listView;
     private ItemsAdapter listAdapter;
@@ -50,6 +51,7 @@ public class ItemsActivity extends AppCompatActivity {
         Intent intent = getIntent();
         final List list = (List) intent.getSerializableExtra(
                 getResources().getString(R.string.intent_list));
+        listId = list.getId();
         if (intent.getBooleanExtra(
                 getResources().getString(R.string.intent_new_list),
                 true)) {
@@ -136,7 +138,10 @@ public class ItemsActivity extends AppCompatActivity {
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(intent);
                 overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
-            case R.id.settingsMenuItemDelete:
+            case R.id.settingsMenuItemDeleteItems:
+                DatabaseHelper.deleteAllItems(listId, getApplicationContext());
+                itemsList.clear();
+                listView.invalidateViews();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
