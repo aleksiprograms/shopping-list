@@ -15,22 +15,22 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.aleksiprograms.shoppinglist.adapters.ItemsAdapter;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
 import com.aleksiprograms.shoppinglist.R;
+import com.aleksiprograms.shoppinglist.adapters.ItemsAdapter;
 import com.aleksiprograms.shoppinglist.tools.DatabaseHelper;
 import com.aleksiprograms.shoppinglist.tools.Item;
 import com.aleksiprograms.shoppinglist.tools.List;
 
 import java.util.ArrayList;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
 public class ItemsActivity extends AppCompatActivity {
 
+    private static ArrayList<Item> itemsList;
     private ListView listView;
     private ItemsAdapter listAdapter;
-    private static ArrayList<Item> itemsList;
     private EditText editTextItem;
     private Item itemToEdit = null;
 
@@ -41,15 +41,18 @@ public class ItemsActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarItems);
         setSupportActionBar(toolbar);
-        if (getSupportActionBar() != null){
+        if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle(getResources().getString(R.string.title_items));
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
 
         Intent intent = getIntent();
-        final List list = (List) intent.getSerializableExtra(getResources().getString(R.string.intent_list));
-        if (intent.getBooleanExtra(getResources().getString(R.string.intent_new_list), true)) {
+        final List list = (List) intent.getSerializableExtra(
+                getResources().getString(R.string.intent_list));
+        if (intent.getBooleanExtra(
+                getResources().getString(R.string.intent_new_list),
+                true)) {
             itemsList = new ArrayList<Item>();
         } else {
             itemsList = DatabaseHelper.getAllItemsOfList(list, getApplicationContext());
@@ -64,12 +67,16 @@ public class ItemsActivity extends AppCompatActivity {
                 TextView textView = (TextView) view.findViewById(R.id.textViewItemName);
                 if (itemsList.get(position).isSelected()) {
                     itemsList.get(position).setSelected(false);
-                    textView.setPaintFlags(textView.getPaintFlags() & ~Paint.STRIKE_THRU_TEXT_FLAG);
-                    textView.setTextColor(getResources().getColor(R.color.colorWhite));
+                    textView.setPaintFlags(
+                            textView.getPaintFlags() & ~Paint.STRIKE_THRU_TEXT_FLAG);
+                    textView.setTextColor(
+                            getResources().getColor(R.color.colorWhite));
                 } else {
                     itemsList.get(position).setSelected(true);
-                    textView.setPaintFlags(textView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                    textView.setTextColor(getResources().getColor(R.color.colorRed));
+                    textView.setPaintFlags(
+                            textView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                    textView.setTextColor(
+                            getResources().getColor(R.color.colorRed));
                 }
             }
         });
@@ -81,15 +88,23 @@ public class ItemsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (String.valueOf(editTextItem.getText()).equals("")) {
-                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_empty_item), Toast.LENGTH_LONG).show();
+                    Toast.makeText(
+                            getApplicationContext(),
+                            getResources().getString(R.string.toast_empty_item),
+                            Toast.LENGTH_LONG).show();
                 } else {
                     if (itemToEdit != null) {
                         itemToEdit.setName(String.valueOf(editTextItem.getText()));
                         long dbUpdateState;
-                        dbUpdateState = DatabaseHelper.updateItem(itemToEdit, getApplicationContext());
+                        dbUpdateState = DatabaseHelper.updateItem(
+                                itemToEdit,
+                                getApplicationContext());
                         itemToEdit = null;
                     } else {
-                        Item item = new Item(String.valueOf(editTextItem.getText()), System.currentTimeMillis(), list.getId());
+                        Item item = new Item(String.valueOf(
+                                editTextItem.getText()),
+                                System.currentTimeMillis(),
+                                list.getId());
                         DatabaseHelper.insertItem(item, getApplicationContext());
                         itemsList.add(item);
                     }
@@ -129,8 +144,10 @@ public class ItemsActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onCreateContextMenu(ContextMenu contextMenu, View view,
-                                    ContextMenu.ContextMenuInfo menuInfo) {
+    public void onCreateContextMenu(
+            ContextMenu contextMenu,
+            View view,
+            ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(contextMenu, view, menuInfo);
         if (view.getId() == R.id.listViewItems) {
             MenuInflater menuInflater = getMenuInflater();

@@ -11,22 +11,22 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 
-import com.aleksiprograms.shoppinglist.adapters.ListsAdapter;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
 import com.aleksiprograms.shoppinglist.R;
+import com.aleksiprograms.shoppinglist.adapters.ListsAdapter;
 import com.aleksiprograms.shoppinglist.tools.DatabaseHelper;
 import com.aleksiprograms.shoppinglist.tools.List;
 
 import java.util.ArrayList;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
 public class MainActivity extends AppCompatActivity {
 
+    private static ArrayList<List> listsList;
     private Intent intent;
     private ListView listView;
     private ListsAdapter listAdapter;
-    private static ArrayList<List> listsList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,17 +35,21 @@ public class MainActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarLists);
         setSupportActionBar(toolbar);
-        if (getSupportActionBar() != null){
+        if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle(getResources().getString(R.string.title_lists));
         }
 
         listsList = DatabaseHelper.getAllLists(getApplicationContext());
         for (int i = 0; i < listsList.size(); i++) {
-            if (DatabaseHelper.getAllItemsOfList(listsList.get(i), getApplicationContext()).size() == 0) {
+            if (DatabaseHelper.getAllItemsOfList(
+                    listsList.get(i),
+                    getApplicationContext()).size() == 0) {
                 DatabaseHelper.deleteList(listsList.get(i), getApplicationContext());
                 listsList.remove(i);
             } else {
-                listsList.get(i).setItems(DatabaseHelper.getAllItemsOfList(listsList.get(i), getApplicationContext()));
+                listsList.get(i).setItems(
+                        DatabaseHelper.getAllItemsOfList(listsList.get(i),
+                                getApplicationContext()));
             }
         }
 
@@ -106,8 +110,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onCreateContextMenu(ContextMenu contextMenu, View view,
-                                    ContextMenu.ContextMenuInfo menuInfo) {
+    public void onCreateContextMenu(
+            ContextMenu contextMenu,
+            View view,
+            ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(contextMenu, view, menuInfo);
         if (view.getId() == R.id.listViewLists) {
             MenuInflater menuInflater = getMenuInflater();
@@ -119,7 +125,6 @@ public class MainActivity extends AppCompatActivity {
     public boolean onContextItemSelected(MenuItem item) {
         AdapterView.AdapterContextMenuInfo info =
                 (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-
         switch (item.getItemId()) {
             case R.id.contextMenuListDelete:
                 DatabaseHelper.deleteList(listsList.get(info.position), getApplicationContext());
@@ -129,14 +134,5 @@ public class MainActivity extends AppCompatActivity {
             default:
                 return super.onContextItemSelected(item);
         }
-    }
-
-    private void listViewToEnd() {
-        listView.post(new Runnable() {
-            @Override
-            public void run() {
-                listView.setSelection(listView.getCount() - 1);
-            }
-        });
     }
 }

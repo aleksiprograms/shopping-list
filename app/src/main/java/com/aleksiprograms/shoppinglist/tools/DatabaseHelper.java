@@ -14,11 +14,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "DATABASE_SHOPPING_LIST_APP";
     private static final String TABLE_LISTS = "TABLE_LISTS";
     private static final String TABLE_ITEMS = "TABLE_ITEMS";
-    private static final String COLUMN_LIST_ID   = "COLUMN_LIST_ID";
+    private static final String COLUMN_LIST_ID = "COLUMN_LIST_ID";
     private static final String COLUMN_LIST_TIME = "COLUMN_LIST_TIME";
-    private static final String COLUMN_ITEM_ID      = "COLUMN_ITEM_ID";
-    private static final String COLUMN_ITEM_NAME    = "COLUMN_ITEM_NAME";
-    private static final String COLUMN_ITEM_TIME    = "COLUMN_ITEM_TIME";
+    private static final String COLUMN_ITEM_ID = "COLUMN_ITEM_ID";
+    private static final String COLUMN_ITEM_NAME = "COLUMN_ITEM_NAME";
+    private static final String COLUMN_ITEM_TIME = "COLUMN_ITEM_TIME";
     private static final String COLUMN_ITEM_LIST_ID = "COLUMN_ITEM_LIST_ID";
 
     private static DatabaseHelper instance;
@@ -31,27 +31,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if (instance == null)
             instance = new DatabaseHelper(context.getApplicationContext());
         return instance;
-    }
-
-    @Override
-    public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE " + TABLE_LISTS + "("
-                + COLUMN_LIST_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-                + COLUMN_LIST_TIME + " INTEGER)");
-        db.execSQL("CREATE TABLE " + TABLE_ITEMS + "("
-                + COLUMN_ITEM_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-                + COLUMN_ITEM_NAME + " TEXT,"
-                + COLUMN_ITEM_TIME + " INTEGER,"
-                + COLUMN_ITEM_LIST_ID + " INTEGER,"
-                + "FOREIGN KEY(" + COLUMN_ITEM_LIST_ID + ") REFERENCES "
-                + TABLE_LISTS + "(" + COLUMN_LIST_ID + "))");
-    }
-
-    @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_LISTS);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_ITEMS);
-        onCreate(db);
     }
 
     public static long insertList(List list, Context context) {
@@ -123,7 +102,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Cursor cursor;
         cursor = db.query(
                 TABLE_ITEMS,
-                new String[] {COLUMN_ITEM_ID, COLUMN_ITEM_NAME, COLUMN_ITEM_TIME, COLUMN_ITEM_LIST_ID},
+                new String[]{
+                        COLUMN_ITEM_ID,
+                        COLUMN_ITEM_NAME,
+                        COLUMN_ITEM_TIME,
+                        COLUMN_ITEM_LIST_ID},
                 COLUMN_ITEM_LIST_ID + " = " + list.getId(),
                 null,
                 null,
@@ -169,5 +152,26 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 new String[]{String.valueOf(item.getId())});
         db.close();
         return i;
+    }
+
+    @Override
+    public void onCreate(SQLiteDatabase db) {
+        db.execSQL("CREATE TABLE " + TABLE_LISTS + "("
+                + COLUMN_LIST_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + COLUMN_LIST_TIME + " INTEGER)");
+        db.execSQL("CREATE TABLE " + TABLE_ITEMS + "("
+                + COLUMN_ITEM_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + COLUMN_ITEM_NAME + " TEXT,"
+                + COLUMN_ITEM_TIME + " INTEGER,"
+                + COLUMN_ITEM_LIST_ID + " INTEGER,"
+                + "FOREIGN KEY(" + COLUMN_ITEM_LIST_ID + ") REFERENCES "
+                + TABLE_LISTS + "(" + COLUMN_LIST_ID + "))");
+    }
+
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_LISTS);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_ITEMS);
+        onCreate(db);
     }
 }

@@ -7,14 +7,14 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.aleksiprograms.shoppinglist.R;
 import com.aleksiprograms.shoppinglist.tools.DateConverter;
 import com.aleksiprograms.shoppinglist.tools.List;
 
 import java.util.ArrayList;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 public class ListsAdapter extends ArrayAdapter<List> {
 
