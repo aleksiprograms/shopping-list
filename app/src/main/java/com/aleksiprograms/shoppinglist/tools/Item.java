@@ -6,21 +6,18 @@ public class Item implements Serializable {
 
     private long id;
     private String name;
-    private long time;
     private long listId;
     private boolean selected;
 
-    public Item(String name, long time, long listId) {
+    public Item(String name, long listId) {
         this.name = name;
-        this.time = time;
         this.listId = listId;
         selected = false;
     }
 
-    public Item(long id, String name, long time, long listId) {
+    public Item(long id, String name, long listId) {
         this.id = id;
         this.name = name;
-        this.time = time;
         this.listId = listId;
         selected = false;
     }
@@ -39,14 +36,6 @@ public class Item implements Serializable {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public long getTime() {
-        return time;
-    }
-
-    public void setTime(long time) {
-        this.time = time;
     }
 
     public long getListId() {

@@ -28,10 +28,9 @@ import java.util.ArrayList;
 
 public class ItemsActivity extends AppCompatActivity {
 
-    private List list;
+    private long listId;
     private static ArrayList<Item> itemsList;
     private ListView listView;
-    private ItemsAdapter listAdapter;
     private EditText editTextItem;
     private Item itemToEdit = null;
 
@@ -49,18 +48,19 @@ public class ItemsActivity extends AppCompatActivity {
         }
 
         Intent intent = getIntent();
-        list = (List) intent.getSerializableExtra(
+        List list = (List) intent.getSerializableExtra(
                 getResources().getString(R.string.intent_list));
+        listId = list.getId();
         if (intent.getBooleanExtra(
                 getResources().getString(R.string.intent_new_list),
                 true)) {
             itemsList = new ArrayList<Item>();
         } else {
-            itemsList = DatabaseHelper.getAllItemsOfList(list, getApplicationContext());
+            itemsList = DatabaseHelper.getAllItemsOfList(listId, getApplicationContext());
         }
 
         listView = (ListView) findViewById(R.id.listViewItems);
-        listAdapter = new ItemsAdapter(getApplicationContext(), itemsList);
+        ItemsAdapter listAdapter = new ItemsAdapter(getApplicationContext(), itemsList);
         listView.setAdapter(listAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -84,7 +84,7 @@ public class ItemsActivity extends AppCompatActivity {
         registerForContextMenu(listView);
 
         editTextItem = (EditText) findViewById(R.id.editTextItem);
-        Button buttonSaveItem = (Button) findViewById(R.id.buttonAddtem);
+        Button buttonSaveItem = (Button) findViewById(R.id.buttonAddItem);
         buttonSaveItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -101,10 +101,9 @@ public class ItemsActivity extends AppCompatActivity {
                                 getApplicationContext());
                         itemToEdit = null;
                     } else {
-                        Item item = new Item(String.valueOf(
-                                editTextItem.getText()),
-                                System.currentTimeMillis(),
-                                list.getId());
+                        Item item = new Item(
+                                String.valueOf(editTextItem.getText()),
+                                listId);
                         DatabaseHelper.insertItem(item, getApplicationContext());
                         itemsList.add(item);
                     }
@@ -137,7 +136,7 @@ public class ItemsActivity extends AppCompatActivity {
                 startActivity(intent);
                 overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
             case R.id.settingsMenuItemDeleteItems:
-                DatabaseHelper.deleteAllItemsOfList(list, getApplicationContext());
+                DatabaseHelper.deleteAllItemsOfList(listId, getApplicationContext());
                 itemsList.clear();
                 listView.invalidateViews();
                 return true;
@@ -171,7 +170,8 @@ public class ItemsActivity extends AppCompatActivity {
                 editTextItem.setFocusable(true);
                 return true;
             case R.id.contextMenuItemDelete:
-                DatabaseHelper.deleteItem(itemsList.get(info.position), getApplicationContext());
+                DatabaseHelper.deleteItem(
+                        itemsList.get(info.position).getId(), getApplicationContext());
                 itemsList.remove(info.position);
                 listView.invalidateViews();
                 return true;

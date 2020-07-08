@@ -26,7 +26,6 @@ public class MainActivity extends AppCompatActivity {
     private static ArrayList<List> listsList;
     private Intent intent;
     private ListView listView;
-    private ListsAdapter listAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,22 +38,25 @@ public class MainActivity extends AppCompatActivity {
             getSupportActionBar().setTitle(getResources().getString(R.string.title_lists));
         }
 
-        listsList = DatabaseHelper.getAllLists(getApplicationContext());
-        for (int i = 0; i < listsList.size(); i++) {
+        // Delete empty list from database.
+        ArrayList<List> tmpList = DatabaseHelper.getAllLists(getApplicationContext());
+        for (int i = 0; i < tmpList.size(); i++) {
             if (DatabaseHelper.getAllItemsOfList(
-                    listsList.get(i),
+                    tmpList.get(i).getId(),
                     getApplicationContext()).size() == 0) {
-                DatabaseHelper.deleteList(listsList.get(i), getApplicationContext());
-                listsList.remove(i);
-            } else {
-                listsList.get(i).setItems(
-                        DatabaseHelper.getAllItemsOfList(listsList.get(i),
-                                getApplicationContext()));
+                DatabaseHelper.deleteList(tmpList.get(i).getId(), getApplicationContext());
             }
         }
 
+        listsList = DatabaseHelper.getAllLists(getApplicationContext());
+        for (int i = 0; i < listsList.size(); i++) {
+            listsList.get(i).setItems(DatabaseHelper.getAllItemsOfList(
+                    listsList.get(i).getId(),
+                    getApplicationContext()));
+        }
+
         listView = (ListView) findViewById(R.id.listViewLists);
-        listAdapter = new ListsAdapter(getApplicationContext(), listsList);
+        ListsAdapter listAdapter = new ListsAdapter(getApplicationContext(), listsList);
         listView.setAdapter(listAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -100,15 +102,13 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.settingsMenuListDeleteLists:
-                DatabaseHelper.deleteAllLists(getApplicationContext());
-                listsList.clear();
-                listView.invalidateViews();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == R.id.settingsMenuListDeleteLists) {
+            DatabaseHelper.deleteAllLists(getApplicationContext());
+            listsList.clear();
+            listView.invalidateViews();
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -127,14 +127,13 @@ public class MainActivity extends AppCompatActivity {
     public boolean onContextItemSelected(MenuItem item) {
         AdapterView.AdapterContextMenuInfo info =
                 (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        switch (item.getItemId()) {
-            case R.id.contextMenuListDelete:
-                DatabaseHelper.deleteList(listsList.get(info.position), getApplicationContext());
-                listsList.remove(info.position);
-                listView.invalidateViews();
-                return true;
-            default:
-                return super.onContextItemSelected(item);
+        if (item.getItemId() == R.id.contextMenuListDelete) {
+            DatabaseHelper.deleteList(
+                    listsList.get(info.position).getId(), getApplicationContext());
+            listsList.remove(info.position);
+            listView.invalidateViews();
+            return true;
         }
+        return super.onContextItemSelected(item);
     }
 }
