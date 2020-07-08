@@ -28,7 +28,7 @@ import java.util.ArrayList;
 
 public class ItemsActivity extends AppCompatActivity {
 
-    private long listId;
+    private List list;
     private static ArrayList<Item> itemsList;
     private ListView listView;
     private ItemsAdapter listAdapter;
@@ -49,9 +49,8 @@ public class ItemsActivity extends AppCompatActivity {
         }
 
         Intent intent = getIntent();
-        final List list = (List) intent.getSerializableExtra(
+        list = (List) intent.getSerializableExtra(
                 getResources().getString(R.string.intent_list));
-        listId = list.getId();
         if (intent.getBooleanExtra(
                 getResources().getString(R.string.intent_new_list),
                 true)) {
@@ -97,8 +96,7 @@ public class ItemsActivity extends AppCompatActivity {
                 } else {
                     if (itemToEdit != null) {
                         itemToEdit.setName(String.valueOf(editTextItem.getText()));
-                        long dbUpdateState;
-                        dbUpdateState = DatabaseHelper.updateItem(
+                        DatabaseHelper.updateItem(
                                 itemToEdit,
                                 getApplicationContext());
                         itemToEdit = null;
@@ -139,7 +137,7 @@ public class ItemsActivity extends AppCompatActivity {
                 startActivity(intent);
                 overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
             case R.id.settingsMenuItemDeleteItems:
-                DatabaseHelper.deleteAllItems(listId, getApplicationContext());
+                DatabaseHelper.deleteAllItemsOfList(list, getApplicationContext());
                 itemsList.clear();
                 listView.invalidateViews();
                 return true;

@@ -28,8 +28,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public static synchronized DatabaseHelper getInstance(Context context) {
-        if (instance == null)
+        if (instance == null) {
             instance = new DatabaseHelper(context.getApplicationContext());
+        }
         return instance;
     }
 
@@ -37,16 +38,30 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = DatabaseHelper.getInstance(context).getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(COLUMN_LIST_TIME, list.getTime());
-        long i = db.insert(TABLE_LISTS, null, values);
+        long i = db.insert(
+                TABLE_LISTS,
+                null,
+                values);
         db.close();
         return i;
+    }
+
+    public static void deleteList(List list, Context context) {
+        SQLiteDatabase db = DatabaseHelper.getInstance(context).getWritableDatabase();
+        db.delete(
+                TABLE_LISTS,
+                COLUMN_LIST_ID + " = ?",
+                new String[]{String.valueOf(list.getId())});
+        db.close();
     }
 
     public static ArrayList<List> getAllLists(Context context) {
         SQLiteDatabase db = DatabaseHelper.getInstance(context).getReadableDatabase();
         ArrayList<List> lists = new ArrayList<>();
         Cursor cursor;
-        cursor = db.rawQuery("SELECT * FROM " + TABLE_LISTS, null);
+        cursor = db.rawQuery(
+                "SELECT * FROM " + TABLE_LISTS,
+                null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             List list = new List(
@@ -60,40 +75,49 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return lists;
     }
 
-    public static int deleteAllLists(Context context) {
+    public static void deleteAllLists(Context context) {
         SQLiteDatabase db = DatabaseHelper.getInstance(context).getWritableDatabase();
-        int i = db.delete(TABLE_LISTS, null, null);
+        db.delete(
+                TABLE_LISTS,
+                null,
+                null);
         db.close();
-        return i;
     }
 
-    public static int updateList(List list, Context context) {
-        SQLiteDatabase db = DatabaseHelper.getInstance(context).getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(COLUMN_LIST_TIME, list.getTime());
-        int i = db.update(TABLE_LISTS, values, COLUMN_LIST_ID + " = ?",
-                new String[]{String.valueOf(list.getId())});
-        db.close();
-        return i;
-    }
-
-    public static int deleteList(List list, Context context) {
-        SQLiteDatabase db = DatabaseHelper.getInstance(context).getWritableDatabase();
-        int i = db.delete(TABLE_LISTS, COLUMN_LIST_ID + " = ?",
-                new String[]{String.valueOf(list.getId())});
-        db.close();
-        return i;
-    }
-
-    public static long insertItem(Item item, Context context) {
+    public static void insertItem(Item item, Context context) {
         SQLiteDatabase db = DatabaseHelper.getInstance(context).getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(COLUMN_ITEM_NAME, item.getName());
         values.put(COLUMN_ITEM_TIME, item.getTime());
         values.put(COLUMN_ITEM_LIST_ID, item.getListId());
-        long i = db.insert(TABLE_ITEMS, null, values);
+        db.insert(
+                TABLE_ITEMS,
+                null,
+                values);
         db.close();
-        return i;
+    }
+
+    public static void updateItem(Item item, Context context) {
+        SQLiteDatabase db = DatabaseHelper.getInstance(context).getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_ITEM_NAME, item.getName());
+        values.put(COLUMN_ITEM_TIME, item.getTime());
+        values.put(COLUMN_ITEM_LIST_ID, item.getListId());
+        db.update(
+                TABLE_ITEMS,
+                values,
+                COLUMN_ITEM_ID + " = ?",
+                new String[]{String.valueOf(item.getId())});
+        db.close();
+    }
+
+    public static void deleteItem(Item item, Context context) {
+        SQLiteDatabase db = DatabaseHelper.getInstance(context).getWritableDatabase();
+        db.delete(
+                TABLE_ITEMS,
+                COLUMN_ITEM_ID + " = ?",
+                new String[]{String.valueOf(item.getId())});
+        db.close();
     }
 
     public static ArrayList<Item> getAllItemsOfList(List list, Context context) {
@@ -127,40 +151,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return items;
     }
 
-    public static int deleteAllItems(long listId, Context context) {
+    public static void deleteAllItemsOfList(List list, Context context) {
         SQLiteDatabase db = DatabaseHelper.getInstance(context).getWritableDatabase();
-        int i = db.delete(TABLE_ITEMS, COLUMN_ITEM_LIST_ID + " = ?",
-                new String[]{String.valueOf(listId)});
+        db.delete(
+                TABLE_ITEMS,
+                COLUMN_ITEM_LIST_ID + " = ?",
+                new String[]{String.valueOf(list.getId())});
         db.close();
-        return i;
-    }
-
-    public static int updateItem(Item item, Context context) {
-        SQLiteDatabase db = DatabaseHelper.getInstance(context).getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(COLUMN_ITEM_NAME, item.getName());
-        values.put(COLUMN_ITEM_TIME, item.getTime());
-        values.put(COLUMN_ITEM_LIST_ID, item.getListId());
-        int i = db.update(TABLE_ITEMS, values, COLUMN_ITEM_ID + " = ?",
-                new String[]{String.valueOf(item.getId())});
-        db.close();
-        return i;
-    }
-
-    public static int deleteItem(Item item, Context context) {
-        SQLiteDatabase db = DatabaseHelper.getInstance(context).getWritableDatabase();
-        int i = db.delete(TABLE_ITEMS, COLUMN_ITEM_ID + " = ?",
-                new String[]{String.valueOf(item.getId())});
-        db.close();
-        return i;
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE " + TABLE_LISTS + "("
+        db.execSQL(
+                "CREATE TABLE " + TABLE_LISTS + "("
                 + COLUMN_LIST_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + COLUMN_LIST_TIME + " INTEGER)");
-        db.execSQL("CREATE TABLE " + TABLE_ITEMS + "("
+        db.execSQL(
+                "CREATE TABLE " + TABLE_ITEMS + "("
                 + COLUMN_ITEM_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + COLUMN_ITEM_NAME + " TEXT,"
                 + COLUMN_ITEM_TIME + " INTEGER,"
