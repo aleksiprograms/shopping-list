@@ -66,14 +66,20 @@ public class ItemsActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 TextView textView = (TextView) view.findViewById(R.id.textViewItemName);
-                if (itemsList.get(position).isSelected()) {
-                    itemsList.get(position).setSelected(false);
+                if (itemsList.get(position).isBought()) {
+                    itemsList.get(position).setBought(false);
+                    DatabaseHelper.updateItem(
+                            itemsList.get(position),
+                            getApplicationContext());
                     textView.setPaintFlags(
                             textView.getPaintFlags() & ~Paint.STRIKE_THRU_TEXT_FLAG);
                     textView.setTextColor(
                             getResources().getColor(R.color.colorWhite));
                 } else {
-                    itemsList.get(position).setSelected(true);
+                    itemsList.get(position).setBought(true);
+                    DatabaseHelper.updateItem(
+                            itemsList.get(position),
+                            getApplicationContext());
                     textView.setPaintFlags(
                             textView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
                     textView.setTextColor(

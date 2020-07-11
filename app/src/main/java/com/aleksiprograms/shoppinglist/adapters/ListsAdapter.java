@@ -28,7 +28,7 @@ public class ListsAdapter extends ArrayAdapter<List> {
         LayoutInflater layoutInflater = LayoutInflater.from(getContext());
         View view = layoutInflater.inflate(R.layout.list_row, null);
         List list = getItem(position);
-        TextView tvRowName = (TextView) view.findViewById(R.id.textViewListName);
+        TextView textView = (TextView) view.findViewById(R.id.textViewListName);
         String name = "";
         for (int i = 0; i < list.getItems().size(); i++) {
             if (i == list.getItems().size() - 1) {
@@ -37,7 +37,7 @@ public class ListsAdapter extends ArrayAdapter<List> {
                 name = name + list.getItems().get(i).getName() + ", ";
             }
         }
-        tvRowName.setText(name);
+        textView.setText(name);
         TextView tvRowTime = (TextView) view.findViewById(R.id.textViewListTime);
         tvRowTime.setText(DateConverter.millisToDate(list.getTime()));
         return view;

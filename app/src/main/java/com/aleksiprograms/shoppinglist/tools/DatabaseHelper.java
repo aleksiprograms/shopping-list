@@ -18,6 +18,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_LIST_TIME = "COLUMN_LIST_TIME";
     private static final String COLUMN_ITEM_ID = "COLUMN_ITEM_ID";
     private static final String COLUMN_ITEM_NAME = "COLUMN_ITEM_NAME";
+    private static final String COLUMN_ITEM_BOUGHT = "COLUMN_ITEM_BOUGHT";
     private static final String COLUMN_ITEM_LIST_ID = "COLUMN_ITEM_LIST_ID";
 
     private static DatabaseHelper instance;
@@ -87,6 +88,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = DatabaseHelper.getInstance(context).getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(COLUMN_ITEM_NAME, item.getName());
+        values.put(COLUMN_ITEM_BOUGHT, item.isBought() ? 1 : 0);
         values.put(COLUMN_ITEM_LIST_ID, item.getListId());
         db.insert(
                 TABLE_ITEMS,
@@ -99,6 +101,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = DatabaseHelper.getInstance(context).getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(COLUMN_ITEM_NAME, item.getName());
+        values.put(COLUMN_ITEM_BOUGHT, item.isBought() ? 1 : 0);
         values.put(COLUMN_ITEM_LIST_ID, item.getListId());
         db.update(
                 TABLE_ITEMS,
@@ -126,6 +129,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 new String[]{
                         COLUMN_ITEM_ID,
                         COLUMN_ITEM_NAME,
+                        COLUMN_ITEM_BOUGHT,
                         COLUMN_ITEM_LIST_ID},
                 COLUMN_ITEM_LIST_ID + " = " + listId,
                 null,
@@ -137,7 +141,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             Item item = new Item(
                     Long.parseLong(cursor.getString(0)),
                     cursor.getString(1),
-                    Long.parseLong(cursor.getString(2)));
+                    Integer.parseInt(cursor.getString(2)) == 1,
+                    Long.parseLong(cursor.getString(3)));
             items.add(item);
             cursor.moveToNext();
         }
@@ -161,10 +166,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "CREATE TABLE " + TABLE_LISTS + "("
                 + COLUMN_LIST_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + COLUMN_LIST_TIME + " INTEGER)");
-        db.execSQL(
-                "CREATE TABLE " + TABLE_ITEMS + "("
+        db.execSQL
+                ("CREATE TABLE " + TABLE_ITEMS + "("
                 + COLUMN_ITEM_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + COLUMN_ITEM_NAME + " TEXT,"
+                + COLUMN_ITEM_BOUGHT + " INTEGER,"
                 + COLUMN_ITEM_LIST_ID + " INTEGER,"
                 + "FOREIGN KEY(" + COLUMN_ITEM_LIST_ID + ") REFERENCES "
                 + TABLE_LISTS + "(" + COLUMN_LIST_ID + "))");

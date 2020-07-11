@@ -1,6 +1,7 @@
 package com.aleksiprograms.shoppinglist.adapters;
 
 import android.content.Context;
+import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,8 +28,19 @@ public class ItemsAdapter extends ArrayAdapter<Item> {
         LayoutInflater layoutInflater = LayoutInflater.from(getContext());
         View view = layoutInflater.inflate(R.layout.item_row, null);
         Item item = getItem(position);
-        TextView tvRowName = (TextView) view.findViewById(R.id.textViewItemName);
-        tvRowName.setText(item.getName());
+        TextView textView = (TextView) view.findViewById(R.id.textViewItemName);
+        textView.setText(item.getName());
+        if (item.isBought()) {
+            textView.setPaintFlags(
+                    textView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            textView.setTextColor(
+                    getContext().getResources().getColor(R.color.colorRed));
+        } else {
+            textView.setPaintFlags(
+                    textView.getPaintFlags() & ~Paint.STRIKE_THRU_TEXT_FLAG);
+            textView.setTextColor(
+                    getContext().getResources().getColor(R.color.colorWhite));
+        }
         return view;
     }
 }

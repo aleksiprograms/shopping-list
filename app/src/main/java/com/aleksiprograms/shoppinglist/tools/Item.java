@@ -6,20 +6,20 @@ public class Item implements Serializable {
 
     private long id;
     private String name;
+    private boolean bought;
     private long listId;
-    private boolean selected;
 
     public Item(String name, long listId) {
         this.name = name;
+        bought = false;
         this.listId = listId;
-        selected = false;
     }
 
-    public Item(long id, String name, long listId) {
+    public Item(long id, String name, boolean bought, long listId) {
         this.id = id;
         this.name = name;
+        this.bought = bought;
         this.listId = listId;
-        selected = false;
     }
 
     public long getId() {
@@ -38,19 +38,19 @@ public class Item implements Serializable {
         this.name = name;
     }
 
+    public boolean isBought() {
+        return bought;
+    }
+
+    public void setBought(boolean bought) {
+        this.bought = bought;
+    }
+
     public long getListId() {
         return listId;
     }
 
     public void setListId(long listId) {
         this.listId = listId;
-    }
-
-    public boolean isSelected() {
-        return selected;
-    }
-
-    public void setSelected(boolean selected) {
-        this.selected = selected;
     }
 }
