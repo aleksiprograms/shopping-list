@@ -1,7 +1,11 @@
 # Shopping List
-A shopping list made with native Android.<br/>
+A shopping list app made with native Android.
+
+<div>
 <img src="/screenshots/shoppinglistlists.jpg" width="240px">
 <img src="/screenshots/shoppinglistitems.jpg" width="240px">
+</div>
+
 ### Features
 - you can make several shopping lists
 - you can edit shopping lists (add new items or delete items)
